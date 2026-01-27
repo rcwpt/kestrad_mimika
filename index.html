@@ -11,13 +11,12 @@
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; scroll-behavior: smooth; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        /* Add pointer cursor to indicate clickability for summary cards */
         .card-clickable { cursor: pointer; transition: all 0.3s ease; }
         .card-clickable:active { transform: scale(0.98); }
         
         .section-title { position: relative; display: inline-block; margin-bottom: 1.5rem; }
         .section-title::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 60%; height: 4px; background: linear-gradient(to right, #10b981, #3b82f6); border-radius: 2px; }
-        .chart-container { position: relative; height: 300px; width: 100%; }
+        .chart-container { position: relative; height: 350px; width: 100%; } /* Increased height for tooltips */
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
@@ -110,7 +109,7 @@
         const others = ["Kokonao","Mapar","Amar","Ipaya","Atuka","Wakia","Tapormai","Agimuga","Jila","Hoya","Tsinga"];
         others.forEach(n => puskData.push({name:n, hattra:0, toga:0, asman:0, nakes:0, germija:0}));
 
-        // CALCULATE TOTALS
+        // CALCULATE TOTALS & PREPARE NAME LISTS FOR TOOLTIPS
         function countNib(data) {
             return {
                 ada: data.filter(i => i.nib).length,
@@ -131,6 +130,30 @@
             germija: puskData.filter(p => p.germija).length,
             total: puskData.length
         };
+
+        // --- PREPARE NAME LISTS FOR TOOLTIPS ---
+        
+        // Puskesmas Names per Category
+        const puskNames = {
+            hattra: puskData.filter(p => p.hattra).map(p => p.name),
+            toga: puskData.filter(p => p.toga).map(p => p.name),
+            asman: puskData.filter(p => p.asman).map(p => p.name),
+            nakes: puskData.filter(p => p.nakes).map(p => p.name),
+            germija: puskData.filter(p => p.germija).map(p => p.name)
+        };
+
+        // Herbal Names by NIB
+        const herbalNames = {
+            ada: herbalData.filter(h => h.nib).map(h => h.shop),
+            tidak: herbalData.filter(h => !h.nib).map(h => h.shop)
+        };
+
+        // Spa Names by NIB
+        const spaNames = {
+            ada: spaData.filter(s => s.nib).map(s => s.shop),
+            tidak: spaData.filter(s => !s.nib).map(s => s.shop)
+        };
+
     </script>
 
     <!-- Header / Hero Section -->
@@ -171,7 +194,7 @@
                         <canvas id="chartPuskesmas"></canvas>
                     </div>
                     <div class="mt-4 text-sm text-slate-500 text-center">
-                        Total 26 Puskesmas di Kabupaten Mimika
+                        Arahkan kursor ke grafik untuk melihat daftar Puskesmas
                     </div>
                 </div>
 
@@ -180,16 +203,12 @@
                     
                     <!-- Grafik 2: Kepatuhan NIB Toko Obat (Pie Chart) -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 card-hover flex flex-col md:flex-row items-center gap-6">
-                        <div class="w-full md:w-1/2 h-48 relative">
+                        <div class="w-full md:w-1/2 h-64 relative">
                             <canvas id="chartNibHerbal"></canvas>
-                             <!-- Center Icon for Herbal -->
-                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <i class="fas fa-leaf text-3xl text-green-600 opacity-20"></i>
-                            </div>
                         </div>
                         <div class="w-full md:w-1/2">
                             <h3 class="font-bold text-lg text-emerald-700 mb-2">Izin Toko Obat & Herbal</h3>
-                            <p class="text-sm text-slate-500 mb-4">Kepatuhan kepemilikan NIB khusus sektor Herbal.</p>
+                            <p class="text-sm text-slate-500 mb-4">Hover grafik untuk melihat nama toko.</p>
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center text-sm">
                                     <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>Sudah Berizin</span>
@@ -205,16 +224,16 @@
 
                     <!-- Grafik 3: Statistik SPA (Doughnut Chart) -->
                     <div class="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-2xl shadow-lg border border-pink-100 card-hover flex flex-col md:flex-row items-center gap-6">
-                        <div class="w-full md:w-1/2 h-48 relative">
+                        <div class="w-full md:w-1/2 h-64 relative">
                             <canvas id="chartSpa"></canvas>
-                            <!-- Center Icon for Doughnut -->
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                             <!-- Center Icon for Doughnut -->
+                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <i class="fas fa-spa text-3xl text-pink-400 opacity-50"></i>
                             </div>
                         </div>
                         <div class="w-full md:w-1/2">
                             <h3 class="font-bold text-lg text-pink-700 mb-2">Statistik Izin SPA & Salon</h3>
-                            <p class="text-sm text-pink-600/70 mb-4">Visualisasi kepatuhan sektor kecantikan.</p>
+                            <p class="text-sm text-pink-600/70 mb-4">Hover grafik untuk melihat nama Spa.</p>
                             <div class="bg-white/60 p-3 rounded-lg backdrop-blur-sm border border-pink-200">
                                 <div class="flex justify-between text-sm font-semibold text-pink-800">
                                     <span>Tingkat Kepatuhan:</span>
@@ -231,39 +250,50 @@
             </div>
         </section>
 
-        <!-- SCRIPT UNTUK RENDER CHART -->
+        <!-- SCRIPT UNTUK RENDER CHART DENGAN TOOLTIP CUSTOM -->
         <script>
-            // Populate Text Values for Herbal
+            // Populate Text Values
             document.getElementById('valHerbalAda').innerText = statsHerbal.ada;
             document.getElementById('valHerbalTidak').innerText = statsHerbal.tidak;
-            
-            // Populate Text Values for Spa
             const spaPercentage = Math.round((statsSpa.ada / statsSpa.total) * 100);
             document.getElementById('spaPercent').innerText = spaPercentage + "%";
             document.getElementById('spaBar').style.width = spaPercentage + "%";
 
+            // Common Tooltip Options to show list of names
+            const customTooltipOptions = (namesArray) => ({
+                enabled: true,
+                callbacks: {
+                    afterBody: function(context) {
+                        const dataIndex = context[0].dataIndex;
+                        const names = namesArray[dataIndex];
+                        if (names && names.length > 0) {
+                            return '\nDAFTAR:\n' + names.map(n => '• ' + n).join('\n');
+                        }
+                        return '';
+                    }
+                }
+            });
+
             // 1. Chart Puskesmas (Bar)
             const ctxPusk = document.getElementById('chartPuskesmas').getContext('2d');
+            const puskNamesArray = [puskNames.hattra, puskNames.toga, puskNames.asman, puskNames.nakes, puskNames.germija];
+            
             new Chart(ctxPusk, {
                 type: 'bar',
                 data: {
                     labels: ['Ruang Hattra', 'Toga', 'Asman', 'Nakes Terlatih', 'Germija'],
                     datasets: [{
-                        label: 'Jumlah Puskesmas (Ada)',
+                        label: 'Jumlah Puskesmas',
                         data: [puskStats.hattra, puskStats.toga, puskStats.asman, puskStats.nakes, puskStats.germija],
                         backgroundColor: [
-                            'rgba(59, 130, 246, 0.7)', // Blue
-                            'rgba(16, 185, 129, 0.7)', // Green
-                            'rgba(245, 158, 11, 0.7)', // Orange
-                            'rgba(139, 92, 246, 0.7)', // Purple
-                            'rgba(239, 68, 68, 0.7)'   // Red
+                            'rgba(59, 130, 246, 0.7)', 
+                            'rgba(16, 185, 129, 0.7)', 
+                            'rgba(245, 158, 11, 0.7)', 
+                            'rgba(139, 92, 246, 0.7)', 
+                            'rgba(239, 68, 68, 0.7)'
                         ],
                         borderColor: [
-                            'rgb(59, 130, 246)',
-                            'rgb(16, 185, 129)',
-                            'rgb(245, 158, 11)',
-                            'rgb(139, 92, 246)',
-                            'rgb(239, 68, 68)'
+                            'rgb(59, 130, 246)', 'rgb(16, 185, 129)', 'rgb(245, 158, 11)', 'rgb(139, 92, 246)', 'rgb(239, 68, 68)'
                         ],
                         borderWidth: 1,
                         borderRadius: 8,
@@ -273,7 +303,8 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: customTooltipOptions(puskNamesArray) // Attach tooltip logic
                     },
                     scales: {
                         y: {
@@ -287,6 +318,8 @@
 
             // 2. Chart NIB Herbal ONLY (Pie)
             const ctxNib = document.getElementById('chartNibHerbal').getContext('2d');
+            const herbalNamesArray = [herbalNames.ada, herbalNames.tidak];
+
             new Chart(ctxNib, {
                 type: 'pie',
                 data: {
@@ -301,13 +334,16 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' }
+                        legend: { position: 'bottom' },
+                        tooltip: customTooltipOptions(herbalNamesArray)
                     }
                 }
             });
 
             // 3. Chart Spa (Doughnut)
             const ctxSpa = document.getElementById('chartSpa').getContext('2d');
+            const spaNamesArray = [spaNames.ada, spaNames.tidak];
+
             new Chart(ctxSpa, {
                 type: 'doughnut',
                 data: {
@@ -324,7 +360,8 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: customTooltipOptions(spaNamesArray)
                     }
                 }
             });
