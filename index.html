@@ -3,757 +3,676 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografis KESTRAD 2025 - Dashboard Statistik</title>
+    <title>Infografis Kestradis Mimika 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Palette: Vibrant Medical (Teal, Deep Blue, Orange) -->
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; scroll-behavior: smooth; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .card-clickable { cursor: pointer; transition: all 0.3s ease; }
-        .card-clickable:active { transform: scale(0.98); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FDFA; /* Light Teal bg */
+            color: #1F2937;
+        }
         
-        .section-title { position: relative; display: inline-block; margin-bottom: 1.5rem; }
-        .section-title::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 60%; height: 4px; background: linear-gradient(to right, #10b981, #3b82f6); border-radius: 2px; }
-        .chart-container { position: relative; height: 300px; width: 100%; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-</head>
-<body class="text-slate-800">
-
-    <!-- DATA SOURCE DEFINITION (Internal Data) -->
-    <script>
-        // Data Penyehat Tradisional (Pijat, Bekam, Akupressur) - TANPA Refleksi
-        const penyehatData = [
-            {no:1, name:"Nias Mustofa Murad", business:"Akupressur Saraf", addr:"Jln. Sam Ratulangi", method:"Akupressur Saraf", nib:true},
-            {no:2, name:"Marzuki", business:"Ahli Pijat Saraf", addr:"Nawaripi", method:"Akupressur Saraf", nib:true},
-            {no:3, name:"Rustiana", business:"Pijat Tradisional", addr:"Jln. Cenderawasih, SP 2", method:"Minyak Zaitun", nib:true},
-            {no:4, name:"Pancar", business:"Pijat Tradisional", addr:"Kampung Ayuka", method:"Minyak", nib:true},
-            {no:5, name:"Agus Subandi", business:"Rumah Sehat", addr:"Jln Kompi B, Ruko 1 SP 3", method:"Minyak & Ramuan", nib:true},
-            {no:9, name:"Rawi", business:"Pijat Tradisional", addr:"Jln. Hasanudin", method:"Minyak Kelapa", nib:false},
-            {no:10, name:"La Ode Malik", business:"Pijat Tradisional", addr:"Jln Budi Utomo", method:"Minyak & Ramuan", nib:false},
-            {no:14, name:"Indra", business:"Terapi Pijat Bekam", addr:"Jln. Sam Ratulangi", method:"Alat Bekam", nib:false},
-            {no:15, name:"Oscar", business:"Oscar Bekam", addr:"Jln. Irigasi Ujung", method:"Alat Bekam", nib:false},
-            {no:16, name:"Cak Rijal Bekam", business:"Bekami", addr:"Jln Poros SP 3", method:"Alat Bekam", nib:false},
-            {no:17, name:"Alimudin", business:"Bekam", addr:"Kilo 9", method:"Alat Bekam", nib:false},
-        ];
-
-        // Data Refleksi (Dipisahkan)
-        const refleksiData = [
-            {no:6, name:"Bpk Agung", business:"Agung Refleksi", addr:"Jl. Busiri", method:"Alat Refleksi & Manual", nib:true},
-            {no:7, name:"Ibu Agustina Belapo", business:"Narwastu Reflexiologi", addr:"Jl. Hasanudin", method:"Alat Refleksi & Manual", nib:true},
-            {no:8, name:"Yuilanti", business:"Refleksi Keluarga", addr:"Jl Cenderawasih, SP 2", method:"Alat Refleksi & Manual", nib:true},
-            {no:11, name:"Abdurasyid", business:"Terapi Pijat Refleksi", addr:"Jln SP 5 Arah Karitas", method:"Minyak & Ramuan", nib:false},
-        ];
-
-        // Data Spa
-        const spaData = [
-            {name:"Melli", shop:"Spa Nomi", addr:"Jln. Sam Ratulangi", nib:true},
-            {name:"Sintia", shop:"Spa Grand Tembaga", addr:"Nawaripi", nib:true},
-            {name:"Diana", shop:"Spa Aldy's", addr:"Jln. Cenderawasih, SP 2", nib:true},
-            {name:"Teguh", shop:"Spa Olin", addr:"Jln. Kihajar Dewantara", nib:true},
-            {name:"Dewanta", shop:"Spa Luxury", addr:"Jln. Yos Sudarso", nib:true},
-            {name:"Yanti", shop:"Spa Yanti", addr:"Kampung Ayuka", nib:true},
-            {name:"Elsina Batu Muly", shop:"Spa Khusus Wanita", addr:"Jl Yos Sudarso", nib:true},
-            {name:"Miing Sundari", shop:"Timika Barbershop", addr:"Jl Kihajardewantara", nib:true},
-            {name:"Puspita Sari", shop:"Spa Willis", addr:"Jln. Hasanudin", nib:false},
-            {name:"Rahayu Ningsih", shop:"Spa Maleo", addr:"Jln. Sam Ratulangi", nib:false},
-            {name:"Iryani Maya", shop:"Spa Akasia", addr:"Jln. Irigasi Ujung", nib:false},
-            {name:"Revani", shop:"Revani Salon", addr:"Jln. Budi Utomo", nib:false},
-        ];
-
-        // Data Herbal
-        const herbalData = [
-            {shop:"Depot Jamu Sumber Alam", pj:"Kastum Abadi", addr:"Jln Pendidikan", nib:true},
-            {shop:"Jamu Barokah", pj:"Eddy", addr:"Jln Serui Mekar", nib:true},
-            {shop:"Tiongkok/ Syifa Herbal", pj:"Agustina", addr:"Jln. Belibis", nib:true},
-            {shop:"Bintang Jaya", pj:"P. Holsen", addr:"Jln Yos Sudarso", nib:true},
-            {shop:"Aneka Jamu", pj:"Ny. Musiana", addr:"Jln Achmad Yani", nib:true},
-            {shop:"Herbal Dennis", pj:"Sudahlan", addr:"Jln Kihajar Dewantara", nib:true},
-            {shop:"Tauhid Herbal", pj:"Sahadat Ratu", addr:"Jln. Seroja", nib:true},
-            {shop:"Sehat dgan Herbal", pj:"Stien Andolo", addr:"Jln. Yos Sudarso", nib:true},
-            {shop:"Rumah Madu 1", pj:"Mula Ridwan Lamide", addr:"Jln. Yos Sudarso", nib:true},
-            {shop:"Medical Herbal", pj:"Muh. Natsar", addr:"Jln Padat Karya", nib:true},
-            {shop:"Ramuan Herbal", pj:"Ita Mustofa", addr:"Jl. Belakang PLN", nib:true},
-            {shop:"Distributor Tiens", pj:"Nini", addr:"Jl. Trikora", nib:true},
-            {shop:"Rumah Madu 2", pj:"Mula Ridwan Lamide", addr:"Jln. Cenderawasih", nib:false},
-            {shop:"Distributor HNI SP 2", pj:"Susanto", addr:"Jl. SP2 Jaur 4", nib:false},
-            {shop:"Herbal Madu El Fathan", pj:"Muh Hanif", addr:"Jl. Kihajardewantara", nib:false},
-            {shop:"Toko Sudifadel", pj:"Salahudin", addr:"Jl. Kihajardewantara", nib:false},
-            {shop:"Distributor HNI Yos Sudarso", pj:"Yulianti", addr:"Jl Makarena", nib:false},
-            {shop:"Minyak Daun Gatal", pj:"Mona Mote", addr:"Jl. Irigasi", nib:false},
-            {shop:"Distributor HNI SP 4", pj:"Raharti", addr:"Jl. SP 4", nib:false},
-            {shop:"Rumah Madu Ummi", pj:"Ummi Sri", addr:"Jl. Yos Sudarso, SP 1", nib:false},
-        ];
-
-        // Data Puskesmas
-        const puskData = [
-            {name:"Timika", hattra:1, toga:1, asman:1, nakes:0, germija:1},
-            {name:"Pasar Sentral", hattra:0, toga:1, asman:0, nakes:0, germija:1},
-            {name:"Timika Jaya", hattra:1, toga:0, asman:0, nakes:1, germija:1},
-            {name:"Kwamki", hattra:1, toga:1, asman:0, nakes:0, germija:1},
-            {name:"Karang Senang", hattra:1, toga:1, asman:0, nakes:1, germija:1},
-            {name:"Bhintuka", hattra:1, toga:1, asman:0, nakes:0, germija:1},
-            {name:"Limau Asri", hattra:1, toga:1, asman:0, nakes:0, germija:1},
-            {name:"Wania", hattra:0, toga:1, asman:0, nakes:1, germija:1},
-            {name:"Ayuka", hattra:0, toga:1, asman:1, nakes:0, germija:1},
-            {name:"Mapurujaya", hattra:0, toga:0, asman:0, nakes:0, germija:0},
-            {name:"Manasari", hattra:0, toga:1, asman:0, nakes:0, germija:0},
-            {name:"Potowaiburu", hattra:0, toga:1, asman:0, nakes:0, germija:1},
-            {name:"Jita", hattra:0, toga:1, asman:0, nakes:0, germija:0},
-            {name:"Arwanop", hattra:0, toga:1, asman:0, nakes:0, germija:0},
-            {name:"Alama", hattra:0, toga:0, asman:0, nakes:0, germija:1},
-        ];
-        const others = ["Kokonao","Mapar","Amar","Ipaya","Atuka","Wakia","Tapormai","Agimuga","Jila","Hoya","Tsinga"];
-        others.forEach(n => puskData.push({name:n, hattra:0, toga:0, asman:0, nakes:0, germija:0}));
-
-        // CALCULATE TOTALS & PREPARE NAME LISTS FOR TOOLTIPS
-        function countNib(data) {
-            return {
-                ada: data.filter(i => i.nib).length,
-                tidak: data.filter(i => !i.nib).length,
-                total: data.length
-            };
+        /* Chart Container Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
         }
 
-        const statsPenyehat = countNib(penyehatData);
-        const statsRefleksi = countNib(refleksiData);
-        const statsSpa = countNib(spaData);
-        const statsHerbal = countNib(herbalData);
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
         
-        const puskStats = {
-            hattra: puskData.filter(p => p.hattra).length,
-            toga: puskData.filter(p => p.toga).length,
-            asman: puskData.filter(p => p.asman).length,
-            nakes: puskData.filter(p => p.nakes).length,
-            germija: puskData.filter(p => p.germija).length,
-            total: puskData.length
-        };
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: #F97316;
+            border-radius: 2px;
+        }
 
-        // --- PREPARE NAME LISTS FOR TOOLTIPS ---
-        const puskNames = {
-            hattra: puskData.filter(p => p.hattra).map(p => p.name),
-            toga: puskData.filter(p => p.toga).map(p => p.name),
-            asman: puskData.filter(p => p.asman).map(p => p.name),
-            nakes: puskData.filter(p => p.nakes).map(p => p.name),
-            germija: puskData.filter(p => p.germija).map(p => p.name)
-        };
-        const herbalNames = {
-            ada: herbalData.filter(h => h.nib).map(h => h.shop),
-            tidak: herbalData.filter(h => !h.nib).map(h => h.shop)
-        };
-        const spaNames = {
-            ada: spaData.filter(s => s.nib).map(s => s.shop),
-            tidak: spaData.filter(s => !s.nib).map(s => s.shop)
-        };
-        const penyehatNames = {
-            ada: penyehatData.filter(p => p.nib).map(p => p.business),
-            tidak: penyehatData.filter(p => !p.nib).map(p => p.business)
-        };
-        const refleksiNames = {
-            ada: refleksiData.filter(r => r.nib).map(r => r.business),
-            tidak: refleksiData.filter(r => !r.nib).map(r => r.business)
-        };
-    </script>
+        /* Hover Effects for Clickable Elements */
+        .cursor-pointer:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s ease;
+        }
+
+        /* Modal Animation */
+        #infoModal {
+            transition: opacity 0.3s ease;
+        }
+        #infoModal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #infoModal:not(.hidden) {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Custom Scrollbar for Modal List */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="antialiased">
 
     <!-- Header / Hero Section -->
-    <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white py-12 px-4 shadow-xl relative overflow-hidden">
-        <div class="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
-            <i class="fas fa-notes-medical text-9xl"></i>
-        </div>
-        <div class="max-w-7xl mx-auto text-center relative z-10">
-            <div class="inline-block p-4 rounded-full bg-white/10 mb-4 backdrop-blur-sm">
-                <i class="fas fa-heartbeat text-5xl text-emerald-400 animate-pulse"></i>
-            </div>
-            <h1 class="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Laporan KESTRAD 2025</h1>
-            <p class="text-xl text-slate-300 font-light">Dinas Kesehatan Kabupaten Mimika</p>
-            <div class="mt-6 flex justify-center gap-4 text-sm">
-                <span class="bg-emerald-500/20 px-4 py-1 rounded-full border border-emerald-500/50 text-emerald-300">Update: Desember 2025</span>
-                <span class="bg-blue-500/20 px-4 py-1 rounded-full border border-blue-500/50 text-blue-300">Status: Valid</span>
-            </div>
+    <header class="bg-gradient-to-r from-teal-800 to-sky-700 text-white py-12 px-4 shadow-lg">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
+                <i class="fa-solid fa-notes-medical mr-3"></i>Laporan Data Kestradis Mimika 2025
+            </h1>
+            <p class="text-teal-100 text-lg md:text-xl max-w-2xl mx-auto">
+                Analisis komprehensif ekosistem kesehatan tradisional: Praktisi (Hattra), Spa, Salon, & Kesiapan Puskesmas.
+            </p>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto py-10 px-4 space-y-16">
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-16">
 
-        <!-- GRAFIK STATISTIK -->
-        <section id="grafik-statistik" class="animate-fade-in-up">
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-chart-pie text-indigo-500 mr-2"></i> Dashboard Analisis Data
-            </h2>
-            
-            <div class="space-y-8">
-                
-                <!-- ROW 1: Grafik Ketersediaan Layanan Puskesmas (Full Width) -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 card-hover w-full">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="font-bold text-lg text-slate-700">Kesiapan Fasilitas Puskesmas</h3>
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">Persentase (%)</span>
-                    </div>
-                    <div class="chart-container" style="height: 350px;">
-                        <canvas id="chartPuskesmas"></canvas>
-                    </div>
-                </div>
-
-                <!-- ROW 2: Grid 2 Kolom untuk Grafik Pie/Doughnut -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                    <!-- 1. Penyehat Tradisional -->
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 card-hover flex flex-col xl:flex-row items-center gap-6">
-                        <div class="w-full xl:w-1/2 h-64 relative">
-                            <canvas id="chartPenyehat"></canvas>
-                            <!-- Center Icon for Penyehat -->
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <i class="fas fa-hand-holding-heart text-3xl text-orange-600 opacity-30"></i>
-                            </div>
-                        </div>
-                        <div class="w-full xl:w-1/2">
-                            <h3 class="font-bold text-lg text-orange-700 mb-2">Penyehat Tradisional</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-orange-500 mr-2"></span>Sudah Berizin</span>
-                                    <span class="font-bold text-orange-600" id="valPenyehatAda">0</span>
-                                </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-slate-300 mr-2"></span>Belum Berizin</span>
-                                    <span class="font-bold text-slate-500" id="valPenyehatTidak">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Refleksi -->
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 card-hover flex flex-col xl:flex-row items-center gap-6">
-                        <div class="w-full xl:w-1/2 h-64 relative">
-                            <canvas id="chartRefleksi"></canvas>
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <i class="fas fa-shoe-prints text-3xl text-purple-600 opacity-20"></i>
-                            </div>
-                        </div>
-                        <div class="w-full xl:w-1/2">
-                            <h3 class="font-bold text-lg text-purple-700 mb-2">Refleksi</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-purple-500 mr-2"></span>Sudah Berizin</span>
-                                    <span class="font-bold text-purple-600" id="valRefleksiAda">0</span>
-                                </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-slate-300 mr-2"></span>Belum Berizin</span>
-                                    <span class="font-bold text-slate-500" id="valRefleksiTidak">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. Spa & Salon -->
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 card-hover flex flex-col xl:flex-row items-center gap-6">
-                        <div class="w-full xl:w-1/2 h-64 relative">
-                            <canvas id="chartSpa"></canvas>
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <i class="fas fa-spa text-3xl text-pink-400 opacity-20"></i>
-                            </div>
-                        </div>
-                        <div class="w-full xl:w-1/2">
-                            <h3 class="font-bold text-lg text-pink-700 mb-2">Spa & Salon</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-pink-500 mr-2"></span>Sudah Berizin</span>
-                                    <span class="font-bold text-pink-600" id="valSpaAda">0</span>
-                                </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-slate-300 mr-2"></span>Belum Berizin</span>
-                                    <span class="font-bold text-slate-500" id="valSpaTidak">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. Toko Obat & Herbal -->
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 card-hover flex flex-col xl:flex-row items-center gap-6">
-                        <div class="w-full xl:w-1/2 h-64 relative">
-                            <canvas id="chartNibHerbal"></canvas>
-                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <i class="fas fa-leaf text-3xl text-green-600 opacity-20"></i>
-                            </div>
-                        </div>
-                        <div class="w-full xl:w-1/2">
-                            <h3 class="font-bold text-lg text-emerald-700 mb-2">Toko Obat & Herbal</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>Sudah Berizin</span>
-                                    <span class="font-bold text-emerald-600" id="valHerbalAda">0</span>
-                                </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-slate-300 mr-2"></span>Belum Berizin</span>
-                                    <span class="font-bold text-slate-500" id="valHerbalTidak">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SCRIPT UNTUK RENDER CHART -->
-        <script>
-            // Populate Text Values
-            document.getElementById('valHerbalAda').innerText = statsHerbal.ada;
-            document.getElementById('valHerbalTidak').innerText = statsHerbal.tidak;
-            
-            document.getElementById('valSpaAda').innerText = statsSpa.ada;
-            document.getElementById('valSpaTidak').innerText = statsSpa.tidak;
-
-            document.getElementById('valPenyehatAda').innerText = statsPenyehat.ada;
-            document.getElementById('valPenyehatTidak').innerText = statsPenyehat.tidak;
-
-            document.getElementById('valRefleksiAda').innerText = statsRefleksi.ada;
-            document.getElementById('valRefleksiTidak').innerText = statsRefleksi.tidak;
-
-            const customTooltipOptions = (namesArray) => ({
-                enabled: true,
-                callbacks: {
-                    afterBody: function(context) {
-                        const dataIndex = context[0].dataIndex;
-                        const names = namesArray[dataIndex];
-                        if (names && names.length > 0) {
-                            return '\nDAFTAR:\n' + names.map(n => '• ' + n).join('\n');
-                        }
-                        return '';
-                    }
-                }
-            });
-
-            // 1. Chart Puskesmas (Bar)
-            const ctxPusk = document.getElementById('chartPuskesmas').getContext('2d');
-            const puskNamesArray = [puskNames.hattra, puskNames.toga, puskNames.asman, puskNames.nakes, puskNames.germija];
-            new Chart(ctxPusk, {
-                type: 'bar',
-                data: {
-                    labels: ['Ruang Hattra', 'Toga', 'Asman', 'Nakes Terlatih', 'Germija'],
-                    datasets: [{
-                        label: 'Jumlah Puskesmas',
-                        data: [puskStats.hattra, puskStats.toga, puskStats.asman, puskStats.nakes, puskStats.germija],
-                        backgroundColor: [
-                            'rgba(59, 130, 246, 0.7)', 
-                            'rgba(16, 185, 129, 0.7)', 
-                            'rgba(245, 158, 11, 0.7)', 
-                            'rgba(139, 92, 246, 0.7)', 
-                            'rgba(239, 68, 68, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgb(59, 130, 246)', 'rgb(16, 185, 129)', 'rgb(245, 158, 11)', 'rgb(139, 92, 246)', 'rgb(239, 68, 68)'
-                        ],
-                        borderWidth: 1,
-                        borderRadius: 8,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: customTooltipOptions(puskNamesArray)
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 26,
-                            ticks: { stepSize: 5 }
-                        }
-                    }
-                }
-            });
-
-            // 2. Chart Penyehat (Doughnut) - Orange
-            const ctxPenyehat = document.getElementById('chartPenyehat').getContext('2d');
-            const penyehatNamesArray = [penyehatNames.ada, penyehatNames.tidak];
-            new Chart(ctxPenyehat, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Berizin (NIB)', 'Belum Berizin'],
-                    datasets: [{
-                        data: [statsPenyehat.ada, statsPenyehat.tidak],
-                        backgroundColor: ['#f97316', '#cbd5e1'], // Orange vs Slate
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: customTooltipOptions(penyehatNamesArray)
-                    }
-                }
-            });
-
-            // 3. Chart Refleksi (Doughnut) - Purple
-            const ctxRefleksi = document.getElementById('chartRefleksi').getContext('2d');
-            const refleksiNamesArray = [refleksiNames.ada, refleksiNames.tidak];
-            new Chart(ctxRefleksi, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Berizin (NIB)', 'Belum Berizin'],
-                    datasets: [{
-                        data: [statsRefleksi.ada, statsRefleksi.tidak],
-                        backgroundColor: ['#a855f7', '#cbd5e1'], // Purple vs Slate
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: customTooltipOptions(refleksiNamesArray)
-                    }
-                }
-            });
-
-            // 4. Chart Spa (Doughnut) - Pink
-            const ctxSpa = document.getElementById('chartSpa').getContext('2d');
-            const spaNamesArray = [spaNames.ada, spaNames.tidak];
-            new Chart(ctxSpa, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Berizin (NIB)', 'Belum Berizin'],
-                    datasets: [{
-                        data: [statsSpa.ada, statsSpa.tidak],
-                        backgroundColor: ['#ec4899', '#cbd5e1'], // Pink vs Slate
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: customTooltipOptions(spaNamesArray)
-                    }
-                }
-            });
-
-            // 5. Chart NIB Herbal (Doughnut) - Green
-            const ctxNib = document.getElementById('chartNibHerbal').getContext('2d');
-            const herbalNamesArray = [herbalNames.ada, herbalNames.tidak];
-            new Chart(ctxNib, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Ada NIB', 'Tidak Ada NIB'],
-                    datasets: [{
-                        data: [statsHerbal.ada, statsHerbal.tidak],
-                        backgroundColor: ['#10b981', '#cbd5e1'], // Green vs Slate
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: customTooltipOptions(herbalNamesArray)
-                    }
-                }
-            });
-        </script>
-
-        <!-- CARD STATISTIK RINGKAS -->
-        <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            
-            <!-- Card 1: Penyehat (Clickable -> #detail-penyehat) -->
-            <div onclick="document.getElementById('detail-penyehat').scrollIntoView({behavior: 'smooth'})" class="bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex flex-col justify-between card-hover card-clickable h-full">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="bg-orange-100 p-2 rounded-full text-orange-600"><i class="fas fa-hands-healing text-xl"></i></div>
-                    <span class="text-3xl font-bold text-slate-800" id="count-penyehat"></span>
-                </div>
-                <p class="text-slate-500 text-xs font-semibold">Penyehat Tradisional</p>
-                <script>document.getElementById('count-penyehat').innerText = statsPenyehat.total;</script>
-            </div>
-
-            <!-- Card 2: Refleksi (Clickable -> #detail-refleksi) -->
-            <div onclick="document.getElementById('detail-refleksi').scrollIntoView({behavior: 'smooth'})" class="bg-white p-4 rounded-xl shadow-md border-l-4 border-purple-500 flex flex-col justify-between card-hover card-clickable h-full">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="bg-purple-100 p-2 rounded-full text-purple-600"><i class="fas fa-shoe-prints text-xl"></i></div>
-                    <span class="text-3xl font-bold text-slate-800" id="count-refleksi"></span>
-                </div>
-                <p class="text-slate-500 text-xs font-semibold">Refleksi</p>
-                <script>document.getElementById('count-refleksi').innerText = statsRefleksi.total;</script>
-            </div>
-
-            <!-- Card 3: Spa (Clickable -> #detail-spa) -->
-            <div onclick="document.getElementById('detail-spa').scrollIntoView({behavior: 'smooth'})" class="bg-white p-4 rounded-xl shadow-md border-l-4 border-pink-500 flex flex-col justify-between card-hover card-clickable h-full">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="bg-pink-100 p-2 rounded-full text-pink-600"><i class="fas fa-spa text-xl"></i></div>
-                    <span class="text-3xl font-bold text-slate-800" id="count-spa"></span>
-                </div>
-                <p class="text-slate-500 text-xs font-semibold">Spa & Salon</p>
-                <script>document.getElementById('count-spa').innerText = statsSpa.total;</script>
-            </div>
-
-            <!-- Card 4: Herbal (Clickable -> #detail-herbal) -->
-            <div onclick="document.getElementById('detail-herbal').scrollIntoView({behavior: 'smooth'})" class="bg-white p-4 rounded-xl shadow-md border-l-4 border-green-500 flex flex-col justify-between card-hover card-clickable h-full">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="bg-green-100 p-2 rounded-full text-green-600"><i class="fas fa-leaf text-xl"></i></div>
-                    <span class="text-3xl font-bold text-slate-800" id="count-herbal"></span>
-                </div>
-                <p class="text-slate-500 text-xs font-semibold">Toko Obat Herbal</p>
-                <script>document.getElementById('count-herbal').innerText = statsHerbal.total;</script>
-            </div>
-
-            <!-- Card 5: Puskesmas (Clickable -> #detail-puskesmas) -->
-            <div onclick="document.getElementById('detail-puskesmas').scrollIntoView({behavior: 'smooth'})" class="bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 flex flex-col justify-between card-hover card-clickable h-full col-span-2 lg:col-span-1">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="bg-blue-100 p-2 rounded-full text-blue-600"><i class="fas fa-hospital text-xl"></i></div>
-                    <span class="text-3xl font-bold text-slate-800" id="count-pusk"></span>
-                </div>
-                <p class="text-slate-500 text-xs font-semibold">Fasilitas Puskesmas</p>
-                <script>document.getElementById('count-pusk').innerText = puskStats.total;</script>
-            </div>
-        </section>
-
-        <!-- SECTION 1: PENYEHAT TRADISIONAL -->
-        <section id="detail-penyehat">
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-hands-healing text-orange-500 mr-2"></i> Detail Penyehat Tradisional (Pijat/Bekam)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card Component Generator -->
-                <script>
-                    penyehatData.forEach(item => {
-                        const statusClass = item.nib ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-600 border-red-100";
-                        const statusText = item.nib ? "NIB: Ada" : "NIB: Tidak Ada";
-                        const icon = item.business.toLowerCase().includes('bekam') ? 'fa-tint' : 'fa-hand-holding-medical';
-                        
-                        document.write(`
-                            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden card-hover flex flex-col h-full group">
-                                <div class="p-5 flex-grow">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <div class="bg-orange-50 w-12 h-12 rounded-lg flex items-center justify-center text-orange-500 text-xl shadow-inner group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
-                                            <i class="fas ${icon}"></i>
-                                        </div>
-                                        <span class="text-xs font-bold px-3 py-1 rounded-full border ${statusClass}">${statusText}</span>
-                                    </div>
-                                    <h3 class="font-bold text-lg text-slate-800 leading-tight mb-1">${item.business}</h3>
-                                    <p class="text-sm text-slate-500 mb-3"><i class="fas fa-user-circle mr-1"></i> ${item.name}</p>
-                                    <div class="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg mb-2">
-                                        <i class="fas fa-notes-medical text-orange-400 mr-1"></i> ${item.method}
-                                    </div>
-                                </div>
-                                <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 text-xs text-slate-500 flex items-center">
-                                    <i class="fas fa-map-marker-alt text-slate-400 mr-2"></i> ${item.addr}
-                                </div>
-                            </div>
-                        `);
-                    });
-                </script>
-            </div>
-        </section>
-
-        <!-- SECTION 2: REFLEKSI (NEW) -->
-        <section id="detail-refleksi">
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-shoe-prints text-purple-500 mr-2"></i> Detail Refleksi
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <script>
-                    refleksiData.forEach(item => {
-                        const statusClass = item.nib ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-600 border-red-100";
-                        const statusText = item.nib ? "NIB: Ada" : "NIB: Tidak Ada";
-                        
-                        document.write(`
-                            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden card-hover flex flex-col h-full group">
-                                <div class="p-5 flex-grow">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <div class="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center text-purple-500 text-xl shadow-inner group-hover:bg-purple-500 group-hover:text-white transition-colors duration-300">
-                                            <i class="fas fa-shoe-prints"></i>
-                                        </div>
-                                        <span class="text-xs font-bold px-3 py-1 rounded-full border ${statusClass}">${statusText}</span>
-                                    </div>
-                                    <h3 class="font-bold text-lg text-slate-800 leading-tight mb-1">${item.business}</h3>
-                                    <p class="text-sm text-slate-500 mb-3"><i class="fas fa-user-circle mr-1"></i> ${item.name}</p>
-                                    <div class="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg mb-2">
-                                        <i class="fas fa-notes-medical text-purple-400 mr-1"></i> ${item.method}
-                                    </div>
-                                </div>
-                                <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 text-xs text-slate-500 flex items-center">
-                                    <i class="fas fa-map-marker-alt text-slate-400 mr-2"></i> ${item.addr}
-                                </div>
-                            </div>
-                        `);
-                    });
-                </script>
-            </div>
-        </section>
-
-        <!-- SECTION 3: SPA & SALON -->
-        <section id="detail-spa">
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-spa text-pink-500 mr-2"></i> Detail Spa & Salon
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <script>
-                    spaData.forEach(item => {
-                         const statusColor = item.nib ? "text-emerald-500" : "text-slate-300";
-                         const borderTop = item.nib ? "border-pink-500" : "border-slate-300";
-                         
-                         document.write(`
-                            <div class="bg-white rounded-lg shadow-sm p-4 border-t-4 ${borderTop} card-hover group">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h3 class="font-bold text-slate-800 group-hover:text-pink-600 transition-colors">${item.shop}</h3>
-                                    <i class="fas fa-check-circle ${statusColor}"></i>
-                                </div>
-                                <p class="text-xs text-slate-500 mb-1">PJ: ${item.name}</p>
-                                <p class="text-xs text-slate-400"><i class="fas fa-map-pin mr-1"></i> ${item.addr}</p>
-                            </div>
-                         `);
-                    });
-                </script>
-            </div>
-        </section>
-
-        <!-- SECTION 4: TOKO OBAT & HERBAL -->
-        <section id="detail-herbal">
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-mortar-pestle text-green-600 mr-2"></i> Detail Toko Obat & Herbal
-            </h2>
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-100">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-emerald-600 text-white text-sm uppercase tracking-wide">
-                                <th class="p-4 rounded-tl-lg">Nama Sarana</th>
-                                <th class="p-4">Penanggung Jawab</th>
-                                <th class="p-4">Alamat</th>
-                                <th class="p-4 text-center rounded-tr-lg">NIB</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm divide-y divide-slate-100">
-                            <!-- Script to populate rows -->
-                            <script>
-                                herbalData.forEach((item, index) => {
-                                    const rowClass = index % 2 === 0 ? "bg-white" : "bg-emerald-50/50";
-                                    const badge = item.nib 
-                                        ? '<span class="px-2 py-1 rounded bg-emerald-100 text-emerald-700 text-xs font-bold">ADA</span>' 
-                                        : '<span class="px-2 py-1 rounded bg-red-100 text-red-600 text-xs font-bold">TIDAK ADA</span>';
-                                    
-                                    document.write(`
-                                        <tr class="${rowClass} hover:bg-emerald-50 transition">
-                                            <td class="p-3 font-medium text-slate-800">${item.shop}</td>
-                                            <td class="p-3 text-slate-600">${item.pj}</td>
-                                            <td class="p-3 text-slate-500 text-xs"><i class="fas fa-map-marker-alt mr-1"></i> ${item.addr}</td>
-                                            <td class="p-3 text-center">${badge}</td>
-                                        </tr>
-                                    `);
-                                });
-                            </script>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 5: TENAGA KESEHATAN TERLATIH -->
+        <!-- Section 1: Executive Summary (Big Numbers) -->
         <section>
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-user-md text-blue-500 mr-2"></i> Nakes Terlatih (Akupressur)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 text-center card-hover group">
-                    <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition duration-300">
-                        <i class="fas fa-user-doctor text-3xl text-blue-600 group-hover:text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800">dr. Suzan Namza</h3>
-                    <p class="text-sm font-semibold text-blue-500 mb-2">Dokter - Puskesmas Timika Jaya</p>
-                    <div class="flex justify-center space-x-2 text-xs">
-                        <span class="bg-slate-100 px-2 py-1 rounded">TOT Akupressur</span>
-                        <span class="bg-slate-100 px-2 py-1 rounded">Pelatihan Akupressur</span>
+            <div class="mb-8 flex items-center">
+                <i class="fa-solid fa-chart-pie text-orange-500 text-2xl mr-3"></i>
+                <div>
+                    <h2 class="text-2xl font-bold text-teal-900 section-title">Gambaran Umum Ekosistem</h2>
+                    <p class="text-gray-600 mt-2 text-sm">Klik pada kartu untuk melihat daftar nama lengkap.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1: Hattra -->
+                <div onclick="openModalFromCard('hattra')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-xl transition duration-300">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Total Hattra</div>
+                            <div class="text-4xl font-bold text-gray-800 mt-2">22</div>
+                            <div class="text-xs text-orange-600 font-medium mt-1">Praktisi Terdaftar</div>
+                        </div>
+                        <i class="fa-solid fa-hands-holding-circle text-orange-200 text-4xl"></i>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-teal-500 text-center card-hover group">
-                    <div class="w-20 h-20 bg-teal-100 rounded-full mx-auto flex items-center justify-center mb-4 group-hover:bg-teal-600 group-hover:text-white transition duration-300">
-                        <i class="fas fa-user-nurse text-3xl text-teal-600 group-hover:text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800">Kurniati, AKL</h3>
-                    <p class="text-sm font-semibold text-teal-500 mb-2">Kesling - Puskesmas Wania</p>
-                    <div class="flex justify-center space-x-2 text-xs">
-                        <span class="bg-slate-100 px-2 py-1 rounded">TOT Akupressur</span>
-                        <span class="bg-slate-100 px-2 py-1 rounded">Pelatihan Akupressur</span>
+                <!-- Card 2: Spa & Salon -->
+                <div onclick="openModalFromCard('spa')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-teal-500 hover:shadow-xl transition duration-300">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Spa & Salon</div>
+                            <div class="text-4xl font-bold text-gray-800 mt-2">13</div>
+                            <div class="text-xs text-teal-600 font-medium mt-1">Unit Usaha</div>
+                        </div>
+                        <i class="fa-solid fa-spa text-teal-200 text-4xl"></i>
                     </div>
                 </div>
 
-                <!-- Card 3 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500 text-center card-hover group">
-                    <div class="w-20 h-20 bg-purple-100 rounded-full mx-auto flex items-center justify-center mb-4 group-hover:bg-purple-600 group-hover:text-white transition duration-300">
-                        <i class="fas fa-user-nurse text-3xl text-purple-600 group-hover:text-white"></i>
+                <!-- Card 3: Jamu -->
+                <div onclick="openModalFromCard('jamu')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-sky-500 hover:shadow-xl transition duration-300">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Toko Jamu/Herbal</div>
+                            <div class="text-4xl font-bold text-gray-800 mt-2">26</div>
+                            <div class="text-xs text-sky-600 font-medium mt-1">Outlet Distribusi</div>
+                        </div>
+                        <i class="fa-solid fa-leaf text-sky-200 text-4xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800">Ropana Wasarea, AMK</h3>
-                    <p class="text-sm font-semibold text-purple-500 mb-2">Perawat - Puskesmas Jile Ale</p>
-                    <div class="flex justify-center space-x-2 text-xs">
-                        <span class="bg-slate-100 px-2 py-1 rounded">TOT Akupressur</span>
-                        <span class="bg-slate-100 px-2 py-1 rounded">Pelatihan Akupressur</span>
+                </div>
+
+                <!-- Card 4: Puskesmas -->
+                <div onclick="openModalFromCard('puskesmas')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-indigo-500 hover:shadow-xl transition duration-300">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Puskesmas</div>
+                            <div class="text-4xl font-bold text-gray-800 mt-2">26</div>
+                            <div class="text-xs text-indigo-600 font-medium mt-1">Fasilitas Kesehatan</div>
+                        </div>
+                        <i class="fa-solid fa-hospital-user text-indigo-200 text-4xl"></i>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 6: DATA PUSKESMAS -->
-        <section id="detail-puskesmas">
-            <h2 class="text-3xl font-bold text-slate-800 section-title mb-8">
-                <i class="fas fa-hospital text-red-500 mr-2"></i> Detail Layanan Puskesmas
-            </h2>
-            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
-                <div class="flex flex-wrap gap-4 mb-6 text-sm bg-slate-50 p-3 rounded-lg">
-                    <div class="flex items-center"><i class="fas fa-check-circle text-emerald-500 mr-2"></i> Layanan Tersedia</div>
-                    <div class="flex items-center"><i class="fas fa-times-circle text-slate-300 mr-2"></i> Belum Tersedia</div>
+        <!-- Section 2: Hattra Analysis (Charts) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <!-- Left Column: Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 relative">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fa-solid fa-users-viewfinder text-teal-600 mr-3"></i>
+                    Komposisi Penyehat Tradisional
+                </h3>
+                <div class="chart-container">
+                    <canvas id="hattraTypeChart"></canvas>
                 </div>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <script>
-                        // Helper for Yes/No icon
-                        const check = (val) => val ? `<i class="fas fa-check-circle text-emerald-500 text-lg"></i>` : `<i class="fas fa-times-circle text-slate-300 text-lg"></i>`;
-                        const label = (text, val) => `<div class="flex justify-between items-center py-1 border-b border-slate-100 last:border-0"><span class="text-xs text-slate-500">${text}</span> ${check(val)}</div>`;
+                <div class="mt-4 text-center text-xs text-gray-500 bg-gray-50 p-2 rounded border border-gray-100">
+                    <i class="fa-solid fa-hand-pointer mr-1"></i>
+                    Klik pada bagian chart untuk melihat nama praktisi.
+                </div>
+            </div>
 
-                        puskData.forEach(p => {
-                            document.write(`
-                                <div class="border border-slate-200 rounded-lg p-4 hover:border-blue-400 transition bg-slate-50 hover:bg-white hover:shadow-md">
-                                    <h4 class="font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2 flex items-center justify-between">
-                                        ${p.name}
-                                        <i class="fas fa-hospital-user text-slate-300"></i>
-                                    </h4>
-                                    ${label("Ruang Hattra", p.hattra)}
-                                    ${label("Toga", p.toga)}
-                                    ${label("Asman", p.asman)}
-                                    ${label("Nakes Terlatih", p.nakes)}
-                                    ${label("Germija", p.germija)}
+            <!-- Right Column: Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fa-solid fa-file-signature text-orange-500 mr-3"></i>
+                    Status Perizinan (NIB)
+                </h3>
+                <div class="chart-container">
+                    <canvas id="hattraNibChart"></canvas>
+                </div>
+                <div class="mt-4 text-center text-xs text-gray-500 bg-gray-50 p-2 rounded border border-gray-100">
+                    <i class="fa-solid fa-hand-pointer mr-1"></i>
+                    Klik pada batang grafik untuk melihat detail nama.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Commercial Sector (Mixed Layout) -->
+        <section>
+            <div class="mb-6 flex items-center">
+                <i class="fa-solid fa-shop text-teal-700 text-2xl mr-3"></i>
+                <div>
+                    <h2 class="text-2xl font-bold text-teal-900 section-title mb-2">Sektor Komersial</h2>
+                    <p class="text-gray-600 mt-1 text-sm">Perbandingan kepatuhan administrasi Spa, Salon, dan Depot Jamu.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Spa & Salon Breakdown (Interactive Custom Bar) -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full">
+                    <div class="bg-teal-700 px-6 py-4 flex justify-between items-center">
+                        <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-check-double mr-2"></i>Kepatuhan Spa & Salon</h3>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-center">
+                         <!-- Interactive Bars -->
+                        <div class="space-y-6">
+                            <!-- Item 1: Ada NIB -->
+                            <div class="group cursor-pointer" onclick="openModalGeneric('Spa & Salon: Memiliki NIB', db.spa_ada_nib)">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center">
+                                        <i class="fa-solid fa-circle-check text-teal-500 mr-2"></i>Memiliki NIB
+                                    </span>
+                                    <span class="text-sm font-bold text-teal-700">61.5% (8 Unit)</span>
                                 </div>
-                            `);
-                        });
-                    </script>
+                                <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
+                                    <div class="bg-teal-500 h-full rounded-full transition-all duration-500 group-hover:bg-teal-600" style="width: 61.5%"></div>
+                                </div>
+                                <p class="text-xs text-teal-600 mt-1 italic group-hover:font-bold">
+                                    <i class="fa-solid fa-eye mr-1"></i>Klik untuk lihat nama
+                                </p>
+                            </div>
+                            <!-- Item 2: Tidak Ada NIB -->
+                            <div class="group cursor-pointer" onclick="openModalGeneric('Spa & Salon: TIDAK Ada NIB', db.spa_no_nib)">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center">
+                                        <i class="fa-solid fa-circle-xmark text-orange-500 mr-2"></i>Tidak Ada NIB
+                                    </span>
+                                    <span class="text-sm font-bold text-orange-600">38.5% (5 Unit)</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
+                                    <div class="bg-orange-500 h-full rounded-full transition-all duration-500 group-hover:bg-orange-600" style="width: 38.5%"></div>
+                                </div>
+                                <p class="text-xs text-orange-600 mt-1 italic group-hover:font-bold">
+                                    <i class="fa-solid fa-eye mr-1"></i>Klik untuk lihat nama
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jamu & Herbal Chart -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
+                        <i class="fa-solid fa-prescription-bottle-medical text-sky-600 mr-2"></i>
+                        Distribusi & Izin Toko Herbal
+                    </h3>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="jamuChart"></canvas>
+                    </div>
+                    <div class="mt-2 text-center text-xs text-gray-500">
+                        <i class="fa-solid fa-hand-pointer mr-1"></i>Klik chart untuk detail toko
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Puskesmas Infrastructure -->
+        <section class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-hospital text-indigo-600 text-3xl mr-4 mt-1"></i>
+                    <div>
+                        <h2 class="text-2xl font-bold text-teal-900 section-title mb-2">Kesiapan Fasilitas Puskesmas</h2>
+                        <p class="text-gray-600 mt-2 text-sm">
+                            Klik grafik untuk melihat Puskesmas yang <strong class="text-red-500">BELUM</strong> memiliki fasilitas.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0 bg-teal-50 px-5 py-3 rounded-lg border border-teal-100">
+                    <div class="flex items-center justify-center mb-1">
+                        <i class="fa-solid fa-trophy text-yellow-500 mr-2"></i>
+                        <span class="text-xs text-teal-600 uppercase font-bold tracking-wider">Top Performance</span>
+                    </div>
+                    <span class="block text-xl font-bold text-teal-800 text-center">PKM Timika Jaya</span>
+                </div>
+            </div>
+
+            <div class="chart-container" style="max-width: 800px; height: 400px;">
+                <canvas id="puskesmasChart"></canvas>
+            </div>
+            
+            <!-- Cards for Puskesmas Stats (Clickable) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                <!-- Card 1 -->
+                <div onclick="openModalGeneric('Puskesmas: Ada Ruang Hattra', db.pkm_ada_hattra)" class="cursor-pointer bg-gray-50 p-4 rounded-lg text-center hover:bg-teal-100 transition border border-transparent hover:border-teal-300">
+                    <i class="fa-solid fa-door-open text-teal-600 text-2xl mb-2"></i>
+                    <div class="text-3xl font-bold text-teal-600">23%</div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase mt-1">Memiliki Ruang Hattra</div>
+                    <div class="text-[10px] text-gray-400 mt-2">Klik untuk lihat nama PKM</div>
+                </div>
+                <!-- Card 2 -->
+                <div onclick="openModalGeneric('Puskesmas: Memiliki TOGA', db.pkm_ada_toga)" class="cursor-pointer bg-gray-50 p-4 rounded-lg text-center hover:bg-orange-100 transition border border-transparent hover:border-orange-300">
+                    <i class="fa-solid fa-seedling text-orange-500 text-2xl mb-2"></i>
+                    <div class="text-3xl font-bold text-orange-500">46%</div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase mt-1">Memiliki Toga</div>
+                    <div class="text-[10px] text-gray-400 mt-2">Klik untuk lihat nama PKM</div>
+                </div>
+                <!-- Card 3 -->
+                <div onclick="openModalGeneric('Puskesmas: Program GERMIJA', db.pkm_ada_germija)" class="cursor-pointer bg-gray-50 p-4 rounded-lg text-center hover:bg-sky-100 transition border border-transparent hover:border-sky-300">
+                    <i class="fa-solid fa-person-running text-sky-600 text-2xl mb-2"></i>
+                    <div class="text-3xl font-bold text-sky-600">42%</div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase mt-1">Program Germija</div>
+                    <div class="text-[10px] text-gray-400 mt-2">Klik untuk lihat nama PKM</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Human Resources & Conclusion -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- SDM Card -->
+            <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-8 text-white overflow-hidden">
+                <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-5"></div>
+                
+                <h3 class="text-xl font-bold mb-6 border-b border-slate-600 pb-2 flex items-center">
+                    <i class="fa-solid fa-user-doctor mr-3 text-teal-400"></i>SDM Kesehatan Terlatih
+                </h3>
+                
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center text-2xl font-bold mr-4 shadow-lg">
+                        3
+                    </div>
+                    <div>
+                        <p class="text-lg font-semibold">Total Tenaga</p>
+                        <p class="text-slate-400 text-sm">Pelatihan Akupressur</p>
+                    </div>
+                </div>
+
+                <ul class="space-y-4 text-sm text-slate-300">
+                    <li class="flex items-start bg-slate-800 p-2 rounded hover:bg-slate-700 transition cursor-default">
+                        <i class="fa-solid fa-stethoscope text-orange-400 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="text-white">dr. Suzan Namza</strong>
+                            <div class="text-xs text-slate-400">Puskesmas Timika Jaya (Pelayanan Dobel)</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start bg-slate-800 p-2 rounded hover:bg-slate-700 transition cursor-default">
+                        <i class="fa-solid fa-user-nurse text-orange-400 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="text-white">Kurniati, AKL</strong>
+                            <div class="text-xs text-slate-400">Puskesmas Wania (PJ Dobel)</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start bg-slate-800 p-2 rounded hover:bg-slate-700 transition cursor-default">
+                        <i class="fa-solid fa-user-nurse text-teal-400 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="text-white">Ropana Wasarea, AMK</strong>
+                            <div class="text-xs text-slate-400">Puskesmas Jile Ale (Aktif)</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Recommendation Card -->
+            <div class="bg-teal-50 rounded-xl p-8 border border-teal-100 flex flex-col justify-center relative">
+                <i class="fa-solid fa-quote-right absolute top-6 right-6 text-teal-200 text-6xl opacity-50"></i>
+                <h3 class="text-xl font-bold text-teal-900 mb-4 flex items-center">
+                    <i class="fa-solid fa-clipboard-check mr-2"></i>Rekomendasi Strategis
+                </h3>
+                <p class="text-gray-700 mb-6 text-sm leading-relaxed relative z-10">
+                    Berdasarkan gap analisis data tahun 2025, berikut adalah langkah prioritas yang disarankan:
+                </p>
+                <div class="space-y-4 relative z-10">
+                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm">
+                        <div class="min-w-[24px] h-6 rounded-full bg-teal-200 text-teal-800 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</div>
+                        <span>Peningkatan <strong>sosialisasi NIB</strong> secara intensif kepada praktisi Pijat & Bekam yang memiliki tingkat kepatuhan terendah.</span>
+                    </div>
+                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm">
+                        <div class="min-w-[24px] h-6 rounded-full bg-teal-200 text-teal-800 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</div>
+                        <span>Re-aktivasi program <strong>Asman (Asuhan Mandiri)</strong> di Puskesmas, yang saat ini hanya ada di 2 lokasi.</span>
+                    </div>
+                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm">
+                        <div class="min-w-[24px] h-6 rounded-full bg-teal-200 text-teal-800 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">3</div>
+                        <span>Penambahan kuota <strong>Pelatihan Nakes</strong> agar tidak terjadi beban ganda (Double Job) pada petugas yang ada.</span>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-slate-800 text-white py-8 mt-12 border-t border-slate-700">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="font-semibold">&copy; 2025 Dinas Kesehatan Kabupaten Mimika. All rights reserved.</p>
-            <p class="text-slate-400 text-sm mt-2">Dibuat secara otomatis oleh sistem pelaporan KESTRAD.</p>
-        </div>
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center text-sm border-t-4 border-teal-600">
+        <p class="mb-2"><i class="fa-solid fa-building-columns mr-2"></i>Dinas Kesehatan Kabupaten Mimika</p>
+        <p>© 2025 Laporan Kestradis - Visualisasi Data</p>
     </footer>
 
+    <!-- MODAL STRUCTURE -->
+    <div id="infoModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" onclick="closeModal()"></div>
+
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <!-- Modal Panel -->
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-teal-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fa-solid fa-list-ul text-teal-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Data Detail</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500 mb-2" id="modal-subtitle">Daftar nama terkait:</p>
+                                <div id="modal-content" class="text-sm text-gray-700 max-h-60 overflow-y-auto custom-scroll bg-gray-50 p-3 rounded-md border border-gray-200">
+                                    <!-- Dynamic Content Here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-teal-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 sm:ml-3 sm:w-auto" onclick="closeModal()">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT SECTION -->
+    <script>
+        // --- 1. DATA DATABASE (Extracted from Report) ---
+        const db = {
+            // HATTRA TYPES
+            hattra_akupressur: ["Bpk N. Mustofa M (Akupressur Saraf)", "Bpk Marzuki (Ahli Pijat Saraf)"],
+            hattra_pijat: ["Ibu Rustiana", "Bpk Pancar", "Bpk Agus Subandi", "Bpk Rawi", "Bpk La Ode Malik", "Bude Irep", "Bpk Wahid", "Bpk Subandi", "Mbak Opik", "Pakde Nawi", "Bpk Rendra Tourish"],
+            hattra_bekam: ["Indra", "Oscar", "Cak Rijal Bekam", "Alimudin"],
+            hattra_refleksi: ["Abdurasyid", "Bpk Agung", "Ibu Agustina Belapo", "Yuilanti", "Mustakdir Djafar"],
+            
+            // HATTRA NIB
+            hattra_nib_ada_akupressur: ["Bpk N. Mustofa M", "Bpk Marzuki"],
+            hattra_nib_no_akupressur: [],
+            hattra_nib_ada_pijat: ["Ibu Rustiana", "Bpk Pancar", "Bpk Agus Subandi"],
+            hattra_nib_no_pijat: ["Bpk Rawi", "Bpk La Ode Malik", "Bude Irep", "Bpk Wahid", "Bpk Subandi", "Mbak Opik", "Pakde Nawi", "Bpk Rendra Tourish"],
+            hattra_nib_ada_bekam: [],
+            hattra_nib_no_bekam: ["Indra", "Oscar", "Cak Rijal Bekam", "Alimudin"],
+            hattra_nib_ada_refleksi: ["Bpk Agung", "Ibu Agustina Belapo", "Yuilanti"],
+            hattra_nib_no_refleksi: ["Abdurasyid", "Mustakdir Djafar"],
+
+            // SPA & SALON
+            spa_ada_nib: ["Melli (Spa Nomi)", "Sintia (Spa Grand Tembaga)", "Diana (Spa Aldy's)", "Teguh (Spa Olin)", "Dewanta (Spa Luxury)", "Yanti (Spa Yanti)", "Elsina Batu Muly", "Miing Sundari (Timika Barbershop)"],
+            spa_no_nib: ["Puspita Sari (Spa Willis)", "Rahayu Ningsih (Spa Maleo)", "Iryani Maya (Spa Akasia)", "Revani (Revani Salon)", "Anita (Salon Anita)"],
+
+            // JAMU & HERBAL
+            jamu_depot_ada: ["Depot Jamu Sumber Alam", "Jamu Barokah", "Aneka Jamu"],
+            jamu_depot_no: ["Jamu Sehat", "Jamu Berkah"],
+            jamu_herbal_ada: ["Tiongkok/Syifa Herbal", "Bintang Jaya", "Herbal Dennis", "Tauhid Herbal", "Sehat dgan Herbal", "Rumah Madu 1", "Medical Herbal", "Ramuan Herbal", "Distributor Tiens"],
+            jamu_herbal_no: ["Rumah Madu 2", "Distributor HNI SP 2", "Herbal Madu El Fathan", "Toko SudifADEL", "Distributor HNI Yos Sudarso", "Minyak Daun Gatal", "Distributor HNI SP 4", "Rumah Sehat Madu", "Toko SR12 Herbal", "Agen Clorofil Timika", "Sub Stokist K-Link", "Distributor Infinical"],
+
+            // PUSKESMAS (Missing Facilities - for the main bar chart)
+            pkm_no_toga: ["Timika Jaya", "Mapurujaya", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
+            pkm_no_germija: ["Mapurujaya", "Manasari", "Jita", "Arwanop", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
+            pkm_no_hattra: ["Pasar Sentral", "Wania", "Ayuka", "Mapurujaya", "Manasari", "Potowaiburu", "Jita", "Arwanop", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
+            pkm_no_asman: ["Timika", "Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Manasari", "Potowaiburu", "Jita", "Arwanop", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
+
+            // PUSKESMAS (Having Facilities - for the percentage cards)
+            pkm_ada_hattra: ["Timika", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri"],
+            pkm_ada_toga: ["Timika", "Pasar Sentral", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Ayuka", "Manasari", "Potowaiburu", "Jita", "Arwanop"],
+            pkm_ada_germija: ["Timika", "Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Ayuka", "Potowaiburu", "Alama"]
+        };
+
+        // --- 2. MODAL LOGIC ---
+        function openModal(title, items) {
+            document.getElementById('modal-title').innerText = title;
+            const contentDiv = document.getElementById('modal-content');
+            
+            if (!items || items.length === 0) {
+                contentDiv.innerHTML = '<div class="p-2 text-center italic text-gray-500">Tidak ada data terdaftar.</div>';
+            } else {
+                let html = '<ul class="divide-y divide-gray-200">';
+                items.forEach(item => {
+                    html += `<li class="py-2 flex items-start"><i class="fa-solid fa-angle-right text-teal-500 mt-1 mr-2 text-xs"></i><span>${item}</span></li>`;
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            }
+            
+            document.getElementById('infoModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+
+        function openModalGeneric(title, dataArray) {
+            openModal(title, dataArray);
+        }
+
+        function openModalFromCard(type) {
+            let title = "";
+            let data = [];
+            
+            if (type === 'hattra') {
+                title = "Daftar Semua Hattra (22)";
+                data = [...db.hattra_akupressur, ...db.hattra_pijat, ...db.hattra_bekam, ...db.hattra_refleksi];
+            } else if (type === 'spa') {
+                title = "Daftar Spa & Salon (13)";
+                data = [...db.spa_ada_nib, ...db.spa_no_nib];
+            } else if (type === 'jamu') {
+                title = "Daftar Jamu & Herbal (26)";
+                data = [...db.jamu_depot_ada, ...db.jamu_depot_no, ...db.jamu_herbal_ada, ...db.jamu_herbal_no];
+            } else if (type === 'puskesmas') {
+                title = "Daftar Semua Puskesmas (26)";
+                data = [
+                    "Timika", "Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", 
+                    "Wania", "Ayuka", "Mapurujaya", "Manasari", "Potowaiburu", "Jita", "Arwanop", "Alama", "Kokonao", 
+                    "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"
+                ];
+            }
+            openModal(title, data);
+        }
+
+        // --- 3. CHART & INTERACTION LOGIC ---
+
+        // Helper for labels
+        function splitLabel(label, maxLength = 16) {
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxLength) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Chart 1: Hattra Types (Donut)
+        const ctxHattraType = document.getElementById('hattraTypeChart').getContext('2d');
+        const hattraTypeChart = new Chart(ctxHattraType, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pijat Tradisional', 'Refleksi', 'Bekam', 'Akupressur'],
+                datasets: [{
+                    data: [11, 5, 4, 2],
+                    backgroundColor: ['#0F766E', '#0EA5E9', '#F97316', '#64748B']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+                onClick: (e, activeEls) => {
+                    if (activeEls.length === 0) return;
+                    const index = activeEls[0].index;
+                    const label = hattraTypeChart.data.labels[index];
+                    let data = [];
+                    if (label === 'Pijat Tradisional') data = db.hattra_pijat;
+                    else if (label === 'Refleksi') data = db.hattra_refleksi;
+                    else if (label === 'Bekam') data = db.hattra_bekam;
+                    else if (label === 'Akupressur') data = db.hattra_akupressur;
+                    openModal(`Kategori: ${label}`, data);
+                }
+            }
+        });
+
+        // Chart 2: NIB Status (Bar)
+        const ctxHattraNib = document.getElementById('hattraNibChart').getContext('2d');
+        const hattraNibChart = new Chart(ctxHattraNib, {
+            type: 'bar',
+            data: {
+                labels: ['Akupressur', 'Pijat Tradisional', 'Bekam', 'Refleksi'].map(l => splitLabel(l)),
+                datasets: [
+                    { label: 'Ada NIB', data: [2, 3, 0, 3], backgroundColor: '#10B981' },
+                    { label: 'Tidak Ada NIB', data: [0, 8, 4, 2], backgroundColor: '#EF4444' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { x: { stacked: false }, y: { beginAtZero: true } },
+                onClick: (e, activeEls) => {
+                    if (activeEls.length === 0) return;
+                    const datasetIndex = activeEls[0].datasetIndex;
+                    const index = activeEls[0].index;
+                    const status = datasetIndex === 0 ? "Ada NIB" : "Tidak Ada NIB";
+                    // Map original labels (before split)
+                    const rawLabels = ['Akupressur', 'Pijat Tradisional', 'Bekam', 'Refleksi'];
+                    const category = rawLabels[index];
+                    
+                    let data = [];
+                    if (category === 'Akupressur') data = datasetIndex === 0 ? db.hattra_nib_ada_akupressur : db.hattra_nib_no_akupressur;
+                    else if (category === 'Pijat Tradisional') data = datasetIndex === 0 ? db.hattra_nib_ada_pijat : db.hattra_nib_no_pijat;
+                    else if (category === 'Bekam') data = datasetIndex === 0 ? db.hattra_nib_ada_bekam : db.hattra_nib_no_bekam;
+                    else if (category === 'Refleksi') data = datasetIndex === 0 ? db.hattra_nib_ada_refleksi : db.hattra_nib_no_refleksi;
+
+                    openModal(`${category} - ${status}`, data);
+                }
+            }
+        });
+
+        // Chart 3: Jamu (Pie)
+        const ctxJamu = document.getElementById('jamuChart').getContext('2d');
+        const jamuChart = new Chart(ctxJamu, {
+            type: 'pie',
+            data: {
+                labels: ['Herbal (Ada NIB)', 'Herbal (No NIB)', 'Depot Jamu (Ada NIB)', 'Depot Jamu (No NIB)'].map(l => splitLabel(l, 20)),
+                datasets: [{
+                    data: [9, 12, 3, 2],
+                    backgroundColor: ['#0EA5E9', '#94A3B8', '#0F766E', '#F97316']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } } },
+                onClick: (e, activeEls) => {
+                    if (activeEls.length === 0) return;
+                    const index = activeEls[0].index;
+                    // Indexes: 0=Herbal Ada, 1=Herbal No, 2=Jamu Ada, 3=Jamu No
+                    let title = "";
+                    let data = [];
+                    if (index === 0) { title = "Toko Herbal - Ada NIB"; data = db.jamu_herbal_ada; }
+                    else if (index === 1) { title = "Toko Herbal - Tidak Ada NIB"; data = db.jamu_herbal_no; }
+                    else if (index === 2) { title = "Depot Jamu - Ada NIB"; data = db.jamu_depot_ada; }
+                    else if (index === 3) { title = "Depot Jamu - Tidak Ada NIB"; data = db.jamu_depot_no; }
+                    
+                    openModal(title, data);
+                }
+            }
+        });
+
+        // Chart 4: Puskesmas (Horizontal Bar) - Shows MISSING facilities
+        const ctxPuskesmas = document.getElementById('puskesmasChart').getContext('2d');
+        const puskesmasChart = new Chart(ctxPuskesmas, {
+            type: 'bar',
+            data: {
+                labels: ['Memiliki Toga', 'Program Germija', 'Ruangan Hattra', 'Program Asman'].map(l => splitLabel(l, 20)),
+                datasets: [{
+                    label: 'Jumlah Puskesmas (Total 26)',
+                    data: [12, 11, 6, 2],
+                    backgroundColor: '#F97316',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { x: { max: 26, beginAtZero: true } },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            footer: (items) => "Klik untuk lihat PKM yang TIDAK punya fasilitas ini."
+                        }
+                    }
+                },
+                onClick: (e, activeEls) => {
+                    if (activeEls.length === 0) return;
+                    const index = activeEls[0].index;
+                    // Order: Toga, Germija, Hattra, Asman
+                    let title = "";
+                    let data = [];
+                    if (index === 0) { title = "PKM TIDAK Ada Toga"; data = db.pkm_no_toga; }
+                    else if (index === 1) { title = "PKM TIDAK Ada Germija"; data = db.pkm_no_germija; }
+                    else if (index === 2) { title = "PKM TIDAK Ada Ruang Hattra"; data = db.pkm_no_hattra; }
+                    else if (index === 3) { title = "PKM TIDAK Ada Asman"; data = db.pkm_no_asman; }
+
+                    openModal(title, data);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
-
-
