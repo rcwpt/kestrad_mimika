@@ -51,10 +51,47 @@
             border-radius: 2px;
         }
 
-        /* Hover Effects for Clickable Elements */
-        .cursor-pointer:hover {
-            transform: translateY(-2px);
-            transition: transform 0.2s ease;
+        /* --- ANIMASI & HOVER EFFECTS --- */
+        
+        /* Base Card Transition */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Orange Glow (Hattra & Toga) */
+        .hover-glow-orange:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.4), 0 8px 10px -6px rgba(249, 115, 22, 0.1);
+            border-color: #fdba74;
+        }
+
+        /* Teal Glow (Spa & Hattra Room) */
+        .hover-glow-teal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4), 0 8px 10px -6px rgba(13, 148, 136, 0.1);
+            border-color: #5eead4;
+        }
+
+        /* Sky Glow (Jamu & Germija) */
+        .hover-glow-sky:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4), 0 8px 10px -6px rgba(14, 165, 233, 0.1);
+            border-color: #7dd3fc;
+        }
+
+        /* Indigo Glow (Puskesmas) */
+        .hover-glow-indigo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
+            border-color: #a5b4fc;
+        }
+
+        /* RED Glow (Warning/Alert) */
+        .hover-glow-red:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.3), 0 8px 10px -6px rgba(239, 68, 68, 0.1);
+            border-color: #fca5a5;
+            background-color: #fef2f2;
         }
 
         /* Modal Animation */
@@ -113,20 +150,20 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card 1: Hattra -->
-                <div onclick="openModalFromCard('hattra')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-xl transition duration-300">
+                <!-- Card 1: Hattra (Orange Glow) -->
+                <div onclick="openModalFromCard('hattra')" class="card-hover hover-glow-orange cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Total Hattra</div>
                             <div class="text-4xl font-bold text-gray-800 mt-2">22</div>
                             <div class="text-xs text-orange-600 font-medium mt-1">Praktisi Terdaftar</div>
                         </div>
-                        <i class="fa-solid fa-hands-holding-circle text-orange-200 text-4xl"></i>
+                        <i class="fa-solid fa-hands-holding-circle text-orange-200 text-4xl transition-colors duration-300 group-hover:text-orange-400"></i>
                     </div>
                 </div>
 
-                <!-- Card 2: Spa & Salon -->
-                <div onclick="openModalFromCard('spa')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-teal-500 hover:shadow-xl transition duration-300">
+                <!-- Card 2: Spa & Salon (Teal Glow) -->
+                <div onclick="openModalFromCard('spa')" class="card-hover hover-glow-teal cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-teal-500">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Spa & Salon</div>
@@ -137,8 +174,8 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Jamu -->
-                <div onclick="openModalFromCard('jamu')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-sky-500 hover:shadow-xl transition duration-300">
+                <!-- Card 3: Jamu (Sky Glow) -->
+                <div onclick="openModalFromCard('jamu')" class="card-hover hover-glow-sky cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-sky-500">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Toko Jamu/Herbal</div>
@@ -149,8 +186,8 @@
                     </div>
                 </div>
 
-                <!-- Card 4: Puskesmas -->
-                <div onclick="openModalFromCard('puskesmas')" class="cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-indigo-500 hover:shadow-xl transition duration-300">
+                <!-- Card 4: Puskesmas (Indigo Glow) -->
+                <div onclick="openModalFromCard('puskesmas')" class="card-hover hover-glow-indigo cursor-pointer bg-white rounded-xl shadow-md p-6 border-l-4 border-indigo-500">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Puskesmas</div>
@@ -166,7 +203,7 @@
         <!-- Section 2: Hattra Analysis (Charts) -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <!-- Left Column: Chart -->
-            <div class="bg-white rounded-xl shadow-lg p-6 relative">
+            <div class="bg-white rounded-xl shadow-lg p-6 relative card-hover hover:shadow-xl transition-shadow duration-300">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <i class="fa-solid fa-users-viewfinder text-teal-600 mr-3"></i>
                     Komposisi Penyehat Tradisional
@@ -181,7 +218,7 @@
             </div>
 
             <!-- Right Column: Chart -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover hover:shadow-xl transition-shadow duration-300">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <i class="fa-solid fa-file-signature text-orange-500 mr-3"></i>
                     Status Perizinan (NIB)
@@ -208,7 +245,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Spa & Salon Breakdown (Interactive Custom Bar) -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full card-hover hover:shadow-xl transition-shadow duration-300">
                     <div class="bg-teal-700 px-6 py-4 flex justify-between items-center">
                         <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-check-double mr-2"></i>Kepatuhan Spa & Salon</h3>
                     </div>
@@ -223,10 +260,10 @@
                                     </span>
                                     <span class="text-sm font-bold text-teal-700">61.5% (8 Unit)</span>
                                 </div>
-                                <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-                                    <div class="bg-teal-500 h-full rounded-full transition-all duration-500 group-hover:bg-teal-600" style="width: 61.5%"></div>
+                                <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden ring-0 group-hover:ring-2 ring-teal-300 transition-all">
+                                    <div class="bg-teal-500 h-full rounded-full transition-all duration-500 group-hover:bg-teal-400 group-hover:scale-105" style="width: 61.5%"></div>
                                 </div>
-                                <p class="text-xs text-teal-600 mt-1 italic group-hover:font-bold">
+                                <p class="text-xs text-teal-600 mt-1 italic opacity-0 group-hover:opacity-100 transition-opacity">
                                     <i class="fa-solid fa-eye mr-1"></i>Klik untuk lihat nama
                                 </p>
                             </div>
@@ -238,10 +275,10 @@
                                     </span>
                                     <span class="text-sm font-bold text-orange-600">38.5% (5 Unit)</span>
                                 </div>
-                                <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-                                    <div class="bg-orange-500 h-full rounded-full transition-all duration-500 group-hover:bg-orange-600" style="width: 38.5%"></div>
+                                <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden ring-0 group-hover:ring-2 ring-orange-300 transition-all">
+                                    <div class="bg-orange-500 h-full rounded-full transition-all duration-500 group-hover:bg-orange-400 group-hover:scale-105" style="width: 38.5%"></div>
                                 </div>
-                                <p class="text-xs text-orange-600 mt-1 italic group-hover:font-bold">
+                                <p class="text-xs text-orange-600 mt-1 italic opacity-0 group-hover:opacity-100 transition-opacity">
                                     <i class="fa-solid fa-eye mr-1"></i>Klik untuk lihat nama
                                 </p>
                             </div>
@@ -250,7 +287,7 @@
                 </div>
 
                 <!-- Jamu & Herbal Chart -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover hover:shadow-xl transition-shadow duration-300">
                     <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
                         <i class="fa-solid fa-prescription-bottle-medical text-sky-600 mr-2"></i>
                         Distribusi & Izin Toko Herbal
@@ -273,11 +310,11 @@
                     <div>
                         <h2 class="text-2xl font-bold text-teal-900 section-title mb-2">Kesiapan Fasilitas Puskesmas</h2>
                         <p class="text-gray-600 mt-2 text-sm">
-                            Klik grafik untuk melihat Puskesmas yang <strong class="text-red-500">BELUM</strong> memiliki fasilitas.
+                            Visualisasi cakupan layanan Hattra, Toga, Germija, dan Asman.
                         </p>
                     </div>
                 </div>
-                <div class="mt-4 md:mt-0 bg-teal-50 px-5 py-3 rounded-lg border border-teal-100">
+                <div class="mt-4 md:mt-0 bg-teal-50 px-5 py-3 rounded-lg border border-teal-100 card-hover hover:bg-teal-100 transition">
                     <div class="flex items-center justify-center mb-1">
                         <i class="fa-solid fa-trophy text-yellow-500 mr-2"></i>
                         <span class="text-xs text-teal-600 uppercase font-bold tracking-wider">Top Performance</span>
@@ -286,32 +323,104 @@
                 </div>
             </div>
 
+            <!-- Chart: Positive Lists -->
             <div class="chart-container" style="max-width: 800px; height: 400px;">
                 <canvas id="puskesmasChart"></canvas>
+                <div class="absolute top-2 right-2 text-[10px] text-gray-400 bg-white px-2 py-1 rounded shadow-sm">
+                    <i class="fa-solid fa-check text-green-500 mr-1"></i>Klik grafik untuk lihat PKM yang <b>MEMILIKI</b> fasilitas
+                </div>
             </div>
             
-            <!-- Cards for Puskesmas Stats (Clickable) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <!-- Cards for Puskesmas Stats (Positive Clickable) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 mb-8">
                 <!-- Card 1 -->
-                <div onclick="openModalGeneric('Puskesmas: Ada Ruang Hattra', db.pkm_ada_hattra)" class="cursor-pointer bg-gray-50 p-4 rounded-lg text-center hover:bg-teal-100 transition border border-transparent hover:border-teal-300">
-                    <i class="fa-solid fa-door-open text-teal-600 text-2xl mb-2"></i>
+                <div onclick="openModalGeneric('Puskesmas: Ada Ruang Hattra', db.pkm_ada_hattra)" class="card-hover hover-glow-teal cursor-pointer bg-gray-50 p-4 rounded-lg text-center border border-transparent">
+                    <i class="fa-solid fa-door-open text-teal-600 text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
                     <div class="text-3xl font-bold text-teal-600">23%</div>
                     <div class="text-xs font-semibold text-gray-500 uppercase mt-1">Memiliki Ruang Hattra</div>
-                    <div class="text-[10px] text-gray-400 mt-2">Klik untuk lihat nama PKM</div>
+                    <div class="text-[10px] text-gray-400 mt-2"><i class="fa-solid fa-list mr-1"></i>Lihat Daftar (Ada)</div>
                 </div>
                 <!-- Card 2 -->
-                <div onclick="openModalGeneric('Puskesmas: Memiliki TOGA', db.pkm_ada_toga)" class="cursor-pointer bg-gray-50 p-4 rounded-lg text-center hover:bg-orange-100 transition border border-transparent hover:border-orange-300">
-                    <i class="fa-solid fa-seedling text-orange-500 text-2xl mb-2"></i>
+                <div onclick="openModalGeneric('Puskesmas: Memiliki TOGA', db.pkm_ada_toga)" class="card-hover hover-glow-orange cursor-pointer bg-gray-50 p-4 rounded-lg text-center border border-transparent">
+                    <i class="fa-solid fa-seedling text-orange-500 text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
                     <div class="text-3xl font-bold text-orange-500">46%</div>
                     <div class="text-xs font-semibold text-gray-500 uppercase mt-1">Memiliki Toga</div>
-                    <div class="text-[10px] text-gray-400 mt-2">Klik untuk lihat nama PKM</div>
+                    <div class="text-[10px] text-gray-400 mt-2"><i class="fa-solid fa-list mr-1"></i>Lihat Daftar (Ada)</div>
                 </div>
                 <!-- Card 3 -->
-                <div onclick="openModalGeneric('Puskesmas: Program GERMIJA', db.pkm_ada_germija)" class="cursor-pointer bg-gray-50 p-4 rounded-lg text-center hover:bg-sky-100 transition border border-transparent hover:border-sky-300">
-                    <i class="fa-solid fa-person-running text-sky-600 text-2xl mb-2"></i>
+                <div onclick="openModalGeneric('Puskesmas: Program GERMIJA', db.pkm_ada_germija)" class="card-hover hover-glow-sky cursor-pointer bg-gray-50 p-4 rounded-lg text-center border border-transparent">
+                    <i class="fa-solid fa-person-running text-sky-600 text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
                     <div class="text-3xl font-bold text-sky-600">42%</div>
                     <div class="text-xs font-semibold text-gray-500 uppercase mt-1">Program Germija</div>
-                    <div class="text-[10px] text-gray-400 mt-2">Klik untuk lihat nama PKM</div>
+                    <div class="text-[10px] text-gray-400 mt-2"><i class="fa-solid fa-list mr-1"></i>Lihat Daftar (Ada)</div>
+                </div>
+            </div>
+
+            <!-- NEW SECTION: GAP ANALYSIS (Red Alert List) -->
+            <div class="mt-8 pt-8 border-t-2 border-gray-100">
+                <h3 class="text-xl font-bold text-red-700 mb-4 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation mr-2"></i> Area Perhatian Khusus (Puskesmas Belum Ada Fasilitas)
+                </h3>
+                <p class="text-sm text-gray-600 mb-6">
+                    Daftar di bawah ini menunjukan Puskesmas yang <strong>belum memenuhi standar</strong> Kestrad. Klik untuk melihat detail target intervensi.
+                </p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Alert Item 1 -->
+                    <div onclick="openModalGeneric('TARGET: PKM Belum Ada Ruang Hattra', db.pkm_no_hattra)" class="card-hover hover-glow-red cursor-pointer bg-red-50 border border-red-100 p-4 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3 shadow-sm">
+                                <i class="fa-solid fa-door-closed text-red-500"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-red-700">20 PKM</div>
+                                <div class="text-xs font-semibold text-red-600 uppercase">Belum Ada Ruang Hattra</div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-red-300"></i>
+                    </div>
+
+                    <!-- Alert Item 2 -->
+                    <div onclick="openModalGeneric('TARGET: PKM Belum Ada TOGA', db.pkm_no_toga)" class="card-hover hover-glow-red cursor-pointer bg-red-50 border border-red-100 p-4 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3 shadow-sm">
+                                <i class="fa-brands fa-envira text-red-500"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-red-700">14 PKM</div>
+                                <div class="text-xs font-semibold text-red-600 uppercase">Belum Ada Toga</div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-red-300"></i>
+                    </div>
+
+                    <!-- Alert Item 3 -->
+                    <div onclick="openModalGeneric('TARGET: PKM Belum Ada GERMIJA', db.pkm_no_germija)" class="card-hover hover-glow-red cursor-pointer bg-red-50 border border-red-100 p-4 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3 shadow-sm">
+                                <i class="fa-solid fa-ban text-red-500"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-red-700">15 PKM</div>
+                                <div class="text-xs font-semibold text-red-600 uppercase">Belum Ada Germija</div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-red-300"></i>
+                    </div>
+
+                    <!-- Alert Item 4 -->
+                    <div onclick="openModalGeneric('TARGET: PKM Belum Ada ASMAN', db.pkm_no_asman)" class="card-hover hover-glow-red cursor-pointer bg-red-50 border border-red-100 p-4 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3 shadow-sm">
+                                <i class="fa-solid fa-users-slash text-red-500"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-red-700">24 PKM</div>
+                                <div class="text-xs font-semibold text-red-600 uppercase">Belum Ada Asman</div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-red-300"></i>
+                    </div>
                 </div>
             </div>
         </section>
@@ -319,7 +428,7 @@
         <!-- Section 5: Human Resources & Conclusion -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <!-- SDM Card -->
-            <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-8 text-white overflow-hidden">
+            <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-8 text-white overflow-hidden card-hover hover:shadow-2xl hover:scale-[1.01] transition-all">
                 <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-5"></div>
                 
                 <h3 class="text-xl font-bold mb-6 border-b border-slate-600 pb-2 flex items-center">
@@ -362,7 +471,7 @@
             </div>
 
             <!-- Recommendation Card -->
-            <div class="bg-teal-50 rounded-xl p-8 border border-teal-100 flex flex-col justify-center relative">
+            <div class="bg-teal-50 rounded-xl p-8 border border-teal-100 flex flex-col justify-center relative card-hover hover:shadow-lg transition-shadow">
                 <i class="fa-solid fa-quote-right absolute top-6 right-6 text-teal-200 text-6xl opacity-50"></i>
                 <h3 class="text-xl font-bold text-teal-900 mb-4 flex items-center">
                     <i class="fa-solid fa-clipboard-check mr-2"></i>Rekomendasi Strategis
@@ -371,15 +480,15 @@
                     Berdasarkan gap analisis data tahun 2025, berikut adalah langkah prioritas yang disarankan:
                 </p>
                 <div class="space-y-4 relative z-10">
-                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm">
+                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow">
                         <div class="min-w-[24px] h-6 rounded-full bg-teal-200 text-teal-800 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</div>
                         <span>Peningkatan <strong>sosialisasi NIB</strong> secara intensif kepada praktisi Pijat & Bekam yang memiliki tingkat kepatuhan terendah.</span>
                     </div>
-                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm">
+                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow">
                         <div class="min-w-[24px] h-6 rounded-full bg-teal-200 text-teal-800 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</div>
                         <span>Re-aktivasi program <strong>Asman (Asuhan Mandiri)</strong> di Puskesmas, yang saat ini hanya ada di 2 lokasi.</span>
                     </div>
-                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm">
+                    <div class="flex items-start text-sm text-gray-800 bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow">
                         <div class="min-w-[24px] h-6 rounded-full bg-teal-200 text-teal-800 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">3</div>
                         <span>Penambahan kuota <strong>Pelatihan Nakes</strong> agar tidak terjadi beban ganda (Double Job) pada petugas yang ada.</span>
                     </div>
@@ -427,7 +536,7 @@
 
     <!-- SCRIPT SECTION -->
     <script>
-        // --- 1. DATA DATABASE (Extracted from Report) ---
+        // --- 1. DATA DATABASE (UPDATED: Accurate Lists for ADA & TIDAK ADA) ---
         const db = {
             // HATTRA TYPES
             hattra_akupressur: ["Bpk N. Mustofa M (Akupressur Saraf)", "Bpk Marzuki (Ahli Pijat Saraf)"],
@@ -455,16 +564,19 @@
             jamu_herbal_ada: ["Tiongkok/Syifa Herbal", "Bintang Jaya", "Herbal Dennis", "Tauhid Herbal", "Sehat dgan Herbal", "Rumah Madu 1", "Medical Herbal", "Ramuan Herbal", "Distributor Tiens"],
             jamu_herbal_no: ["Rumah Madu 2", "Distributor HNI SP 2", "Herbal Madu El Fathan", "Toko SudifADEL", "Distributor HNI Yos Sudarso", "Minyak Daun Gatal", "Distributor HNI SP 4", "Rumah Sehat Madu", "Toko SR12 Herbal", "Agen Clorofil Timika", "Sub Stokist K-Link", "Distributor Infinical"],
 
-            // PUSKESMAS (Missing Facilities - for the main bar chart)
+            // PUSKESMAS LISTS (Created New Lists as Requested)
+            
+            // 1. PUSKESMAS MEMILIKI FASILITAS (Positive List)
+            pkm_ada_toga: ["Timika", "Pasar Sentral", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Ayuka", "Manasari", "Potowaiburu", "Jita", "Arwanop"],
+            pkm_ada_germija: ["Timika", "Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Ayuka", "Potowaiburu", "Alama"],
+            pkm_ada_hattra: ["Timika", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri"],
+            pkm_ada_asman: ["Timika", "Ayuka"],
+
+            // 2. PUSKESMAS TIDAK MEMILIKI FASILITAS (Negative List)
             pkm_no_toga: ["Timika Jaya", "Mapurujaya", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
             pkm_no_germija: ["Mapurujaya", "Manasari", "Jita", "Arwanop", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
             pkm_no_hattra: ["Pasar Sentral", "Wania", "Ayuka", "Mapurujaya", "Manasari", "Potowaiburu", "Jita", "Arwanop", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
-            pkm_no_asman: ["Timika", "Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Manasari", "Potowaiburu", "Jita", "Arwanop", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"],
-
-            // PUSKESMAS (Having Facilities - for the percentage cards)
-            pkm_ada_hattra: ["Timika", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri"],
-            pkm_ada_toga: ["Timika", "Pasar Sentral", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Ayuka", "Manasari", "Potowaiburu", "Jita", "Arwanop"],
-            pkm_ada_germija: ["Timika", "Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Ayuka", "Potowaiburu", "Alama"]
+            pkm_no_asman: ["Pasar Sentral", "Timika Jaya", "Kwamki", "Karang Senang", "Bhintuka", "Limau Asri", "Wania", "Mapurujaya", "Manasari", "Potowaiburu", "Jita", "Arwanop", "Alama", "Kokonao", "Mapar", "Amar", "Ipaya", "Atuka", "Wakia", "Tapormai", "Agimuga", "Jila", "Hoya", "Tsinga"]
         };
 
         // --- 2. MODAL LOGIC ---
@@ -520,7 +632,6 @@
 
         // --- 3. CHART & INTERACTION LOGIC ---
 
-        // Helper for labels
         function splitLabel(label, maxLength = 16) {
             if (label.length <= maxLength) return label;
             const words = label.split(' ');
@@ -546,7 +657,8 @@
                 labels: ['Pijat Tradisional', 'Refleksi', 'Bekam', 'Akupressur'],
                 datasets: [{
                     data: [11, 5, 4, 2],
-                    backgroundColor: ['#0F766E', '#0EA5E9', '#F97316', '#64748B']
+                    backgroundColor: ['#0F766E', '#0EA5E9', '#F97316', '#64748B'],
+                    hoverBackgroundColor: ['#14b8a6', '#38bdf8', '#fb923c', '#94a3b8'] // Brighter colors on hover
                 }]
             },
             options: {
@@ -574,8 +686,16 @@
             data: {
                 labels: ['Akupressur', 'Pijat Tradisional', 'Bekam', 'Refleksi'].map(l => splitLabel(l)),
                 datasets: [
-                    { label: 'Ada NIB', data: [2, 3, 0, 3], backgroundColor: '#10B981' },
-                    { label: 'Tidak Ada NIB', data: [0, 8, 4, 2], backgroundColor: '#EF4444' }
+                    { 
+                        label: 'Ada NIB', data: [2, 3, 0, 3], 
+                        backgroundColor: '#10B981',
+                        hoverBackgroundColor: '#34d399' 
+                    },
+                    { 
+                        label: 'Tidak Ada NIB', data: [0, 8, 4, 2], 
+                        backgroundColor: '#EF4444',
+                        hoverBackgroundColor: '#f87171'
+                    }
                 ]
             },
             options: {
@@ -587,7 +707,6 @@
                     const datasetIndex = activeEls[0].datasetIndex;
                     const index = activeEls[0].index;
                     const status = datasetIndex === 0 ? "Ada NIB" : "Tidak Ada NIB";
-                    // Map original labels (before split)
                     const rawLabels = ['Akupressur', 'Pijat Tradisional', 'Bekam', 'Refleksi'];
                     const category = rawLabels[index];
                     
@@ -610,7 +729,8 @@
                 labels: ['Herbal (Ada NIB)', 'Herbal (No NIB)', 'Depot Jamu (Ada NIB)', 'Depot Jamu (No NIB)'].map(l => splitLabel(l, 20)),
                 datasets: [{
                     data: [9, 12, 3, 2],
-                    backgroundColor: ['#0EA5E9', '#94A3B8', '#0F766E', '#F97316']
+                    backgroundColor: ['#0EA5E9', '#94A3B8', '#0F766E', '#F97316'],
+                    hoverBackgroundColor: ['#38bdf8', '#cbd5e1', '#14b8a6', '#fb923c']
                 }]
             },
             options: {
@@ -620,7 +740,6 @@
                 onClick: (e, activeEls) => {
                     if (activeEls.length === 0) return;
                     const index = activeEls[0].index;
-                    // Indexes: 0=Herbal Ada, 1=Herbal No, 2=Jamu Ada, 3=Jamu No
                     let title = "";
                     let data = [];
                     if (index === 0) { title = "Toko Herbal - Ada NIB"; data = db.jamu_herbal_ada; }
@@ -633,7 +752,7 @@
             }
         });
 
-        // Chart 4: Puskesmas (Horizontal Bar) - Shows MISSING facilities
+        // Chart 4: Puskesmas (Horizontal Bar) - LOGIC UPDATED TO MATCH LABEL (POSITIVE)
         const ctxPuskesmas = document.getElementById('puskesmasChart').getContext('2d');
         const puskesmasChart = new Chart(ctxPuskesmas, {
             type: 'bar',
@@ -643,6 +762,7 @@
                     label: 'Jumlah Puskesmas (Total 26)',
                     data: [12, 11, 6, 2],
                     backgroundColor: '#F97316',
+                    hoverBackgroundColor: '#fb923c', // Lighter orange on hover
                     borderRadius: 4
                 }]
             },
@@ -654,7 +774,7 @@
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            footer: (items) => "Klik untuk lihat PKM yang TIDAK punya fasilitas ini."
+                            footer: (items) => "Klik untuk melihat daftar Puskesmas yang MEMILIKI fasilitas ini."
                         }
                     }
                 },
@@ -664,10 +784,12 @@
                     // Order: Toga, Germija, Hattra, Asman
                     let title = "";
                     let data = [];
-                    if (index === 0) { title = "PKM TIDAK Ada Toga"; data = db.pkm_no_toga; }
-                    else if (index === 1) { title = "PKM TIDAK Ada Germija"; data = db.pkm_no_germija; }
-                    else if (index === 2) { title = "PKM TIDAK Ada Ruang Hattra"; data = db.pkm_no_hattra; }
-                    else if (index === 3) { title = "PKM TIDAK Ada Asman"; data = db.pkm_no_asman; }
+                    
+                    // UPDATED: Shows "ADA" list matching the label "Memiliki/Program..."
+                    if (index === 0) { title = "PKM yang MEMILIKI Toga"; data = db.pkm_ada_toga; }
+                    else if (index === 1) { title = "PKM dengan Program Germija"; data = db.pkm_ada_germija; }
+                    else if (index === 2) { title = "PKM dengan Ruang Hattra"; data = db.pkm_ada_hattra; }
+                    else if (index === 3) { title = "PKM dengan Program Asman"; data = db.pkm_ada_asman; }
 
                     openModal(title, data);
                 }
